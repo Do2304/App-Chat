@@ -11,6 +11,7 @@ class LoginPage extends StatelessWidget {
   Future<void> loginWithGoogle(BuildContext context) async {
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn();
+      await googleSignIn.signOut();
       final googleUser = await googleSignIn.signIn();
 
       if (googleUser == null) return;
@@ -38,7 +39,9 @@ class LoginPage extends StatelessWidget {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        print("data: ${data}");
         final token = data["token"];
+        // print("token: ${token}");
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString("token", token);
 

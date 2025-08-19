@@ -1,15 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
+import 'utils/userService.dart';
 import 'package:http/http.dart' as http;
 
 class ChatService {
   static Stream<String> streamChat(String model, String text) async* {
+    final userId = await getUserIdFromToken() ?? "guest";
     final uri = Uri.parse(
       "http://10.0.2.2:3001/v1/chat/stream"
       "?model=$model"
       "&messages=${Uri.encodeComponent(jsonEncode(text))}"
       "&conversationId=test123"
-      "&userId=b1746fc4-aa39-457b-b3e2-3d7b81f68680",
+      "&userId=$userId",
     );
 
     final request = http.Request("GET", uri);
