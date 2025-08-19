@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'ChatScreen.dart';
+import 'pages/loginPage.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -9,9 +13,14 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ChatScreen(),
+      // home: ChatScreen(),
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => const LoginPage(),
+        '/chat': (context) => const ChatScreen(),
+      },
     );
   }
 }
