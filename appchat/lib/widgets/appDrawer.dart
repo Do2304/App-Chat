@@ -1,3 +1,4 @@
+import '/widgets/drawerBody.dart';
 import '/widgets/drawerHeader.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,7 @@ class Appdrawer extends StatelessWidget {
       child: Column(
         children: [
           const ChatDrawerHeader(),
-          Container(child: Text("Conversation 1")),
-          Container(child: Text("Conversation 2")),
+          ChatDrawerBody(),
           ListTile(
             title: Text("Logout"),
             leading: const Icon(Icons.logout),
