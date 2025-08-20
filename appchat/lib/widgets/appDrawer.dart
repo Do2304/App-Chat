@@ -1,3 +1,4 @@
+import '/widgets/drawerHeader.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -10,19 +11,7 @@ class Appdrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: [
-          SizedBox(
-            height: 110,
-            child: DrawerHeader(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(color: Colors.blue),
-              child: SizedBox.expand(
-                child: Text(
-                  "Luli",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-              ),
-            ),
-          ),
+          const ChatDrawerHeader(),
           Container(child: Text("Conversation 1")),
           Container(child: Text("Conversation 2")),
           ListTile(
