@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'message.dart';
 import 'chat_service.dart';
 
@@ -52,6 +55,17 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Chat with OniAI"),
+        leading: IconButton(
+          onPressed: () async {
+            print("click");
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.remove("token");
+            await FirebaseAuth.instance.signOut();
+            await GoogleSignIn().signOut();
+            Navigator.pushReplacementNamed(context, "/login");
+          },
+          icon: Icon(Icons.logout),
+        ),
         actions: [
           DropdownButton<String>(
             value: selectedModel,
