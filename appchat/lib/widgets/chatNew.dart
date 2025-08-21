@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatNew extends StatelessWidget {
   final VoidCallback startNewConversation;
@@ -13,8 +14,10 @@ class ChatNew extends StatelessWidget {
         "New Conversation",
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
       ),
-      onTap: () {
+      onTap: () async {
         // print("Click");
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove("selectedConversationId");
         Navigator.pop(context);
         startNewConversation();
       },

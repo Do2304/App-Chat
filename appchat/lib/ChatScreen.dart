@@ -93,7 +93,9 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  void startNewConversation() {
+  void startNewConversation() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('selectedConversationId');
     setState(() {
       conversationById = uuid.v4();
       messages.clear();

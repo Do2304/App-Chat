@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Appdrawer extends StatelessWidget {
   final VoidCallback startNewConversation;
   const Appdrawer({super.key, required this.startNewConversation});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -25,6 +26,7 @@ class Appdrawer extends StatelessWidget {
             onTap: () async {
               final prefs = await SharedPreferences.getInstance();
               await prefs.remove("token");
+              await prefs.remove("selectedConversationId");
               await FirebaseAuth.instance.signOut();
               await GoogleSignIn().signOut();
               Navigator.pushReplacementNamed(context, "/login");
