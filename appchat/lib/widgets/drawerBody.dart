@@ -14,6 +14,7 @@ class ChatDrawerBody extends StatefulWidget {
 
 class _ChatDrawerBodyState extends State<ChatDrawerBody> {
   late Future<List<Conversation>> _conversations;
+  String? selectedConversation;
 
   Future<List<Conversation>> getListConversation() async {
     final prefs = await SharedPreferences.getInstance();
@@ -39,10 +40,18 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
     }
   }
 
+  Future<void> _loadSelectedConversation() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      selectedConversation = prefs.getString("selectedConversationId");
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _conversations = getListConversation();
+    _loadSelectedConversation();
   }
 
   @override
@@ -71,8 +80,19 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
               return ListTile(
                 leading: const Icon(Icons.message),
                 title: Text(conversation.title),
-                onTap: () {
+                selected: selectedConversation == conversation.id,
+                selectedColor: Colors.black,
+                selectedTileColor: Colors.grey.shade300,
+                onTap: () async {
                   print("Tapped conversation: ${conversation.id}");
+                  setState(() {
+                    selectedConversation = conversation.id;
+                  });
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setString(
+                    "selectedConversationId",
+                    conversation.id,
+                  );
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
