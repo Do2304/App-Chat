@@ -5,6 +5,7 @@ import 'message.dart';
 import 'chat_service.dart';
 import '/widgets/appDrawer.dart';
 import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
 
 class ChatScreen extends StatefulWidget {
   final String conversationId;
@@ -20,6 +21,8 @@ class _ChatScreenState extends State<ChatScreen> {
   bool isTyping = false;
 
   String selectedModel = "gpt-4.1";
+  final uuid = Uuid();
+  late String conversationById;
 
   @override
   void initState() {
@@ -30,11 +33,15 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> loadMessages() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString("token");
-    late String convertionId;
 
-    if (widget.conversationId == "") {}
+    if (widget.conversationId == "") {
+      conversationById = uuid.v4();
+    } else {
+      conversationById = widget.conversationId;
+    }
+
     final response = await http.get(
-      Uri.parse("http://10.0.2.2:3001/v1/chat/${widget.conversationId}"),
+      Uri.parse("http://10.0.2.2:3001/v1/chat/$conversationById"),
       headers: {
         "Content-type": "application/json",
         "Authorization": "Bearer $token",
@@ -66,7 +73,7 @@ class _ChatScreenState extends State<ChatScreen> {
       isTyping = true;
     });
 
-    ChatService.streamChat(selectedModel, text, widget.conversationId).listen(
+    ChatService.streamChat(selectedModel, text, conversationById).listen(
       (chunk) {
         setState(() {
           messages[0].msg += chunk;
