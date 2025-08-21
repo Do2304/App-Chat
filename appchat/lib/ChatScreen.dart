@@ -51,7 +51,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final List listMessages = data["messages"];
-      print(data["messages"]);
+      // print(data["messages"]);
       setState(() {
         messages = listMessages
             .map((mess) => Message(mess['role'] == "User", mess["content"]))
@@ -62,7 +62,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void sendMsg() {
+  void sendMsg() async {
     final text = inputController.text.trim();
     if (text.isEmpty) return;
 
@@ -72,6 +72,8 @@ class _ChatScreenState extends State<ChatScreen> {
       inputController.clear();
       isTyping = true;
     });
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("selectedConversationId", conversationById);
 
     ChatService.streamChat(selectedModel, text, conversationById).listen(
       (chunk) {

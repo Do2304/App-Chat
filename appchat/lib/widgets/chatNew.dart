@@ -16,8 +16,8 @@ class ChatNew extends StatelessWidget {
       ),
       onTap: () async {
         // print("Click");
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.remove("selectedConversationId");
+        // final prefs = await SharedPreferences.getInstance();
+        // await prefs.remove("selectedConversationId");
         Navigator.pop(context);
         startNewConversation();
       },
