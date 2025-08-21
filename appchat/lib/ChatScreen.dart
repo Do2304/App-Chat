@@ -93,6 +93,13 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  void startNewConversation() {
+    setState(() {
+      conversationById = uuid.v4();
+      messages.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -177,7 +184,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
-      drawer: const Appdrawer(),
+      drawer: Appdrawer(startNewConversation: startNewConversation),
     );
   }
 }
