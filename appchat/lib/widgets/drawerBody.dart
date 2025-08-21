@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '/ChatScreen.dart';
 import '/models/modelConversation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -72,6 +73,13 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
                 title: Text(conversation.title),
                 onTap: () {
                   print("Tapped conversation: ${conversation.id}");
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ChatScreen(conversationId: conversation.id),
+                    ),
+                  );
                 },
               );
             },

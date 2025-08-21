@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (context) => const LoginPage(),
-        '/chat': (context) => const ChatScreen(),
+        '/chat': (context) => ChatScreen(conversationId: ""),
       },
     );
   }

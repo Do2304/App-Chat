@@ -1,10 +1,14 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'message.dart';
 import 'chat_service.dart';
-import 'package:appchat/widgets/appDrawer.dart';
+import '/widgets/appDrawer.dart';
+import 'package:http/http.dart' as http;
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  final String conversationId;
+  const ChatScreen({super.key, required this.conversationId});
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
@@ -17,6 +21,40 @@ class _ChatScreenState extends State<ChatScreen> {
 
   String selectedModel = "gpt-4.1";
 
+  @override
+  void initState() {
+    super.initState();
+    loadMessages();
+  }
+
+  Future<void> loadMessages() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
+    late String convertionId;
+
+    if (widget.conversationId == "") {}
+    final response = await http.get(
+      Uri.parse("http://10.0.2.2:3001/v1/chat/${widget.conversationId}"),
+      headers: {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $token",
+      },
+    );
+    // print(response.statusCode);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final List listMessages = data["messages"];
+      print(data["messages"]);
+      setState(() {
+        messages = listMessages
+            .map((mess) => Message(mess['role'] == "User", mess["content"]))
+            .toList()
+            .reversed
+            .toList();
+      });
+    }
+  }
+
   void sendMsg() {
     final text = inputController.text.trim();
     if (text.isEmpty) return;
@@ -28,7 +66,7 @@ class _ChatScreenState extends State<ChatScreen> {
       isTyping = true;
     });
 
-    ChatService.streamChat(selectedModel, text).listen(
+    ChatService.streamChat(selectedModel, text, widget.conversationId).listen(
       (chunk) {
         setState(() {
           messages[0].msg += chunk;

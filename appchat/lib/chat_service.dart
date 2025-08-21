@@ -4,13 +4,17 @@ import 'utils/userService.dart';
 import 'package:http/http.dart' as http;
 
 class ChatService {
-  static Stream<String> streamChat(String model, String text) async* {
+  static Stream<String> streamChat(
+    String model,
+    String text,
+    String conversationId,
+  ) async* {
     final userId = await getUserIdFromToken() ?? "guest";
     final uri = Uri.parse(
       "http://10.0.2.2:3001/v1/chat/stream"
       "?model=$model"
       "&messages=${Uri.encodeComponent(jsonEncode(text))}"
-      "&conversationId=test123"
+      "&conversationId=$conversationId"
       "&userId=$userId",
     );
 
