@@ -112,27 +112,36 @@ class _ChatScreenState extends State<ChatScreen> {
                 print("click");
                 Scaffold.of(context).openDrawer();
               },
-              icon: Icon(Icons.logout),
+              icon: Icon(Icons.menu),
             );
           },
         ),
-        actions: [
-          DropdownButton<String>(
-            value: selectedModel,
-            items: const [
-              DropdownMenuItem(value: "gpt-4.1", child: Text("GPT-4.1")),
-              DropdownMenuItem(
-                value: "claude-opus-4",
-                child: Text("Claude Opus 4"),
-              ),
-              DropdownMenuItem(
-                value: "gemini-2.5-pro",
-                child: Text("Gemini 2.5 Pro"),
-              ),
-            ],
-            onChanged: (val) => setState(() => selectedModel = val!),
-          ),
-        ],
+        actions: messages.isNotEmpty
+            ? [
+                IconButton(
+                  onPressed: () async {
+                    startNewConversation();
+                  },
+                  icon: Icon(Icons.edit_note),
+                ),
+              ]
+            : [
+                DropdownButton<String>(
+                  value: selectedModel,
+                  items: const [
+                    DropdownMenuItem(value: "gpt-4.1", child: Text("GPT-4.1")),
+                    DropdownMenuItem(
+                      value: "claude-opus-4",
+                      child: Text("Claude Opus 4"),
+                    ),
+                    DropdownMenuItem(
+                      value: "gemini-2.5-pro",
+                      child: Text("Gemini 2.5 Pro"),
+                    ),
+                  ],
+                  onChanged: (val) => setState(() => selectedModel = val!),
+                ),
+              ],
       ),
       body: Column(
         children: [
