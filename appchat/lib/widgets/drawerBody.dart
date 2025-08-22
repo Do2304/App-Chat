@@ -47,6 +47,27 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
     });
   }
 
+  void editConversation(String id, String title) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Rename ConverSation"),
+          content: TextField(
+            decoration: InputDecoration(
+              hintText: 'Enter...',
+              suffixIcon: Icon(Icons.abc),
+            ),
+          ),
+          actions: [
+            ElevatedButton(onPressed: () {}, child: Text("Cancel")),
+            ElevatedButton(onPressed: () {}, child: Text("Save")),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -114,6 +135,10 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
                               onTap: () {
                                 print("---edit---");
                                 Navigator.pop(context);
+                                editConversation(
+                                  conversation.id,
+                                  conversation.title,
+                                );
                               },
                             ),
                             ListTile(
