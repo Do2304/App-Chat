@@ -108,6 +108,36 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
     }
   }
 
+  void deleteConversation(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
+
+    final responseDeleteConversation = await http.delete(
+      Uri.parse("http://10.0.2.2:3001/v1/conversation/$id"),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (responseDeleteConversation.statusCode == 200) {
+      setState(() {
+        _conversations = getListConversation();
+      });
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => ChatScreen(conversationId: "")),
+      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Delete successfully")));
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Delete failed!!!")));
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -173,7 +203,6 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
                               leading: const Icon(Icons.edit),
                               title: Text("Edit"),
                               onTap: () {
-                                print("---edit---");
                                 Navigator.pop(context);
                                 editConversation(
                                   conversation.id,
@@ -186,10 +215,13 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
                                 Icons.delete,
                                 color: Colors.red,
                               ),
-                              title: Text("Delete"),
+                              title: Text(
+                                "Delete",
+                                style: TextStyle(color: Colors.red),
+                              ),
                               onTap: () {
-                                print("---delete---");
                                 Navigator.pop(context);
+                                deleteConversation(conversation.id);
                               },
                             ),
                           ],
