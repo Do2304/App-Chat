@@ -100,6 +100,10 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
         setState(() {
           _conversations = getListConversation();
         });
+        Navigator.pop(context);
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Rename successfully")));
       }
     }
   }
