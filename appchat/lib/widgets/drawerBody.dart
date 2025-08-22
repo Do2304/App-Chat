@@ -47,25 +47,61 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
     });
   }
 
-  void editConversation(String id, String title) {
-    showDialog(
+  void editConversation(String id, String title) async {
+    final TextEditingController inputController = TextEditingController(
+      text: title,
+    );
+
+    final newTitle = await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text("Rename ConverSation"),
           content: TextField(
+            controller: inputController,
+            autofocus: true,
             decoration: InputDecoration(
               hintText: 'Enter...',
               suffixIcon: Icon(Icons.abc),
             ),
           ),
           actions: [
-            ElevatedButton(onPressed: () {}, child: Text("Cancel")),
-            ElevatedButton(onPressed: () {}, child: Text("Save")),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context, inputController.text);
+              },
+              child: Text("Save"),
+            ),
           ],
         );
       },
     );
+    // print(newTitle);
+    if (newTitle != null && newTitle.isNotEmpty) {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString("token");
+      final responseRenameConversation = await http.put(
+        Uri.parse("http://10.0.2.2:3001/v1/rename-conversation"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+        body: jsonEncode({"id": id, "newTitle": newTitle}),
+      );
+
+      // print(responseRenameConversation.statusCode);
+      if (responseRenameConversation.statusCode == 200) {
+        setState(() {
+          _conversations = getListConversation();
+        });
+      }
+    }
   }
 
   @override
