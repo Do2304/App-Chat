@@ -100,7 +100,12 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
         setState(() {
           _conversations = getListConversation();
         });
-        Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatScreen(conversationId: id),
+          ),
+        );
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text("Rename successfully")));
@@ -192,7 +197,15 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
                     ),
                   );
                 },
-                onLongPress: () {
+                onLongPress: () async {
+                  setState(() {
+                    selectedConversation = conversation.id;
+                  });
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setString(
+                    "selectedConversationId",
+                    conversation.id,
+                  );
                   showModalBottomSheet(
                     context: context,
                     builder: (context) {
@@ -203,7 +216,6 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
                               leading: const Icon(Icons.edit),
                               title: Text("Edit"),
                               onTap: () {
-                                Navigator.pop(context);
                                 editConversation(
                                   conversation.id,
                                   conversation.title,
