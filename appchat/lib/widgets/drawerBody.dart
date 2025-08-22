@@ -101,6 +101,38 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
                     ),
                   );
                 },
+                onLongPress: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return SafeArea(
+                        child: Wrap(
+                          children: [
+                            ListTile(
+                              leading: const Icon(Icons.edit),
+                              title: Text("Edit"),
+                              onTap: () {
+                                print("---edit---");
+                                Navigator.pop(context);
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
+                              title: Text("Delete"),
+                              onTap: () {
+                                print("---delete---");
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
               );
             },
           );
