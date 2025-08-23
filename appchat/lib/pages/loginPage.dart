@@ -39,21 +39,23 @@ class LoginPage extends StatelessWidget {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print("data: ${data}");
+        // print("data: ${data}");
         final token = data["token"];
         // print("token: ${token}");
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString("token", token);
-
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Login successfully"),
+            duration: Duration(seconds: 1),
+          ),
+        );
         Navigator.pushReplacementNamed(context, '/chat');
       } else {
         throw Exception("Backend login failed: ${response.body}");
       }
     } catch (e) {
       print("Error during Google login: $e");
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error during Google login: $e")));
     }
   }
 
