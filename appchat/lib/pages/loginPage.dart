@@ -1,7 +1,7 @@
+import '/api/authApi.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,14 +27,10 @@ class LoginPage extends StatelessWidget {
       final user = userCredential.user!;
       print("Đăng nhập thành công: ${user.email} - ${user.displayName}");
 
-      final response = await http.post(
-        Uri.parse("http://10.0.2.2:3001/v1/login"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "email": user.email,
-          "name": user.displayName,
-          "photoURL": user.photoURL,
-        }),
+      final response = await AuthApi.loginUser(
+        email: user.email!,
+        displayName: user.displayName!,
+        photoURL: user.photoURL!,
       );
 
       if (response.statusCode == 200) {
