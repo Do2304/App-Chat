@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '/widgets/chatAppBar.dart';
 import '/utils/storageService.dart';
 import '/api/chatApi.dart';
 import 'package:flutter/material.dart';
@@ -97,45 +98,11 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Chat with OniAI"),
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-              onPressed: () async {
-                print("click");
-                Scaffold.of(context).openDrawer();
-              },
-              icon: Icon(Icons.menu),
-            );
-          },
-        ),
-        actions: messages.isNotEmpty
-            ? [
-                IconButton(
-                  onPressed: () async {
-                    startNewConversation();
-                  },
-                  icon: Icon(Icons.edit_note),
-                ),
-              ]
-            : [
-                DropdownButton<String>(
-                  value: selectedModel,
-                  items: const [
-                    DropdownMenuItem(value: "gpt-4.1", child: Text("GPT-4.1")),
-                    DropdownMenuItem(
-                      value: "claude-opus-4",
-                      child: Text("Claude Opus 4"),
-                    ),
-                    DropdownMenuItem(
-                      value: "gemini-2.5-pro",
-                      child: Text("Gemini 2.5 Pro"),
-                    ),
-                  ],
-                  onChanged: (val) => setState(() => selectedModel = val!),
-                ),
-              ],
+      appBar: ChatAppBar(
+        hasMessages: messages.isNotEmpty,
+        startNewConversation: startNewConversation,
+        selectedModel: selectedModel,
+        onChanged: (val) => setState(() => selectedModel = val!),
       ),
       body: Column(
         children: [
