@@ -11,4 +11,9 @@ class StorageService {
     final get = prefs.getString("token");
     return get;
   }
+
+  static Future<void> saveSelectedConversationId(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("selectedConversationId", id);
+  }
 }

@@ -1,7 +1,7 @@
 import 'dart:convert';
+import '/utils/storageService.dart';
 import '/api/chatApi.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../models/message.dart';
 import '../services/chat_service.dart';
 import '/widgets/appDrawer.dart';
@@ -63,8 +63,7 @@ class _ChatScreenState extends State<ChatScreen> {
       inputController.clear();
       isTyping = true;
     });
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("selectedConversationId", conversationById);
+    await StorageService.saveSelectedConversationId(conversationById);
 
     ChatService.streamChat(selectedModel, text, conversationById).listen(
       (chunk) {
@@ -87,8 +86,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void startNewConversation() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('selectedConversationId');
+    // final prefs = await SharedPreferences.getInstance();
+    // await prefs.remove('selectedConversationId');
     setState(() {
       conversationById = uuid.v4();
       messages.clear();
