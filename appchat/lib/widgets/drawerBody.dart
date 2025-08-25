@@ -1,5 +1,5 @@
 import 'dart:convert';
-import '/ChatScreen.dart';
+import '../pages/ChatScreen.dart';
 import '/models/modelConversation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;

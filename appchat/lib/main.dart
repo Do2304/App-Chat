@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'ChatScreen.dart';
+import 'pages/ChatScreen.dart';
 import 'pages/loginPage.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -10,7 +10,7 @@ void main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString("token");
-  print("------$token");
+  // print("------$token");
   runApp(MyApp(initialRoute: token == null ? '/login' : '/chat'));
 }
 
