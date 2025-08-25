@@ -1,3 +1,5 @@
+import 'package:appchat/utils/appSnackBar.dart';
+
 import '/api/authApi.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -40,12 +42,8 @@ class LoginPage extends StatelessWidget {
         // print("token: ${token}");
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString("token", token);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Login successfully"),
-            duration: Duration(seconds: 1),
-          ),
-        );
+
+        AppSnackBar.showSnackBar(context, "Login successfully", 1);
         Navigator.pushReplacementNamed(context, '/chat');
       } else {
         throw Exception("Backend login failed: ${response.body}");
