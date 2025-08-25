@@ -5,4 +5,10 @@ class StorageService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("token", token);
   }
+
+  static Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    final get = prefs.getString("token");
+    return get;
+  }
 }

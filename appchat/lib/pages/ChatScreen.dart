@@ -1,10 +1,10 @@
 import 'dart:convert';
+import '/api/chatApi.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/message.dart';
 import '../services/chat_service.dart';
 import '/widgets/appDrawer.dart';
-import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -31,22 +31,13 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> loadMessages() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString("token");
-
     if (widget.conversationId == "") {
       conversationById = uuid.v4();
     } else {
       conversationById = widget.conversationId;
     }
 
-    final response = await http.get(
-      Uri.parse("http://10.0.2.2:3001/v1/chat/$conversationById"),
-      headers: {
-        "Content-type": "application/json",
-        "Authorization": "Bearer $token",
-      },
-    );
+    final response = await ChatApi.getListMessages(conversationById);
     // print(response.statusCode);
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
