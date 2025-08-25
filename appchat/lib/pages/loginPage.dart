@@ -1,11 +1,10 @@
-import 'package:appchat/utils/appSnackBar.dart';
-
+import '/utils/storageService.dart';
+import '/utils/appSnackBar.dart';
 import '/api/authApi.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -40,8 +39,7 @@ class LoginPage extends StatelessWidget {
         // print("data: ${data}");
         final token = data["token"];
         // print("token: ${token}");
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString("token", token);
+        await StorageService.saveToken(token);
 
         AppSnackBar.showSnackBar(context, "Login successfully", 1);
         Navigator.pushReplacementNamed(context, '/chat');
