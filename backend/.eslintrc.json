@@ -1,0 +1,18 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["react", "@typescript-eslint"],
+  "rules": {
+    // Thêm quy tắc tùy chỉnh nếu cần
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}
