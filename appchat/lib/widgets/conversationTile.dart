@@ -1,7 +1,7 @@
+import '/utils/storageService.dart';
 import '/models/modelConversation.dart';
 import '/pages/ChatScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ConversationTile extends StatelessWidget {
   final Conversation conversation;
@@ -19,6 +19,53 @@ class ConversationTile extends StatelessWidget {
     required this.onDelete,
   });
 
+  void handleOnTap(BuildContext context) async {
+    onSelect(conversation.id);
+    await StorageService.saveSelectedConversationId(conversation.id);
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChatScreen(conversationId: conversation.id),
+      ),
+    );
+  }
+
+  void handleOnLongPress(BuildContext context) async {
+    onSelect(conversation.id);
+    await StorageService.saveSelectedConversationId(conversation.id);
+
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.edit),
+                title: const Text("Edit"),
+                onTap: () {
+                  onEdit();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete, color: Colors.red),
+                title: const Text(
+                  "Delete",
+                  style: TextStyle(color: Colors.red),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  onDelete();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -27,52 +74,8 @@ class ConversationTile extends StatelessWidget {
       selected: selectedConversation == conversation.id,
       selectedColor: Colors.black,
       selectedTileColor: Colors.grey.shade300,
-      onTap: () async {
-        onSelect(conversation.id);
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString("selectedConversationId", conversation.id);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ChatScreen(conversationId: conversation.id),
-          ),
-        );
-      },
-      onLongPress: () async {
-        onSelect(conversation.id);
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString("selectedConversationId", conversation.id);
-
-        showModalBottomSheet(
-          context: context,
-          builder: (context) {
-            return SafeArea(
-              child: Wrap(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.edit),
-                    title: const Text("Edit"),
-                    onTap: () {
-                      onEdit();
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.delete, color: Colors.red),
-                    title: const Text(
-                      "Delete",
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      onDelete();
-                    },
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
+      onTap: () => handleOnTap(context),
+      onLongPress: () => handleOnLongPress(context),
     );
   }
 }

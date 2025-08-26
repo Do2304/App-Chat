@@ -1,14 +1,11 @@
 import 'dart:convert';
-import 'package:appchat/utils/appSnackBar.dart';
-import 'package:appchat/utils/storageService.dart';
-import 'package:appchat/widgets/conversationTile.dart';
-
+import '/utils/appSnackBar.dart';
+import '/utils/storageService.dart';
+import '/widgets/conversationTile.dart';
 import '/api/conversationApi.dart';
 import '../pages/ChatScreen.dart';
 import '/models/modelConversation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatDrawerBody extends StatefulWidget {
   const ChatDrawerBody({super.key});
