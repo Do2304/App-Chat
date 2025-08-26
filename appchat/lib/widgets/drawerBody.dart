@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:appchat/utils/storageService.dart';
+
 import '/api/conversationApi.dart';
 import '../pages/ChatScreen.dart';
 import '/models/modelConversation.dart';
@@ -33,9 +35,9 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
   }
 
   Future<void> _loadSelectedConversation() async {
-    final prefs = await SharedPreferences.getInstance();
+    final selectedId = await StorageService.getSelectedConversationId();
     setState(() {
-      selectedConversation = prefs.getString("selectedConversationId");
+      selectedConversation = selectedId;
     });
   }
 
