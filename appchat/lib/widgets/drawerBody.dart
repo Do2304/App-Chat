@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:appchat/utils/storageService.dart';
+import 'package:appchat/widgets/conversationTile.dart';
 
 import '/api/conversationApi.dart';
 import '../pages/ChatScreen.dart';
@@ -167,75 +168,17 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
             itemCount: conversations.length,
             itemBuilder: (context, index) {
               final conversation = conversations[index];
-              return ListTile(
-                leading: const Icon(Icons.message),
-                title: Text(conversation.title),
-                selected: selectedConversation == conversation.id,
-                selectedColor: Colors.black,
-                selectedTileColor: Colors.grey.shade300,
-                onTap: () async {
-                  // print("Tapped conversation: ${conversation.id}");
+              return ConversationTile(
+                conversation: conversation,
+                selectedConversation: selectedConversation,
+                onSelect: (id) {
                   setState(() {
-                    selectedConversation = conversation.id;
+                    selectedConversation = id;
                   });
-                  final prefs = await SharedPreferences.getInstance();
-                  await prefs.setString(
-                    "selectedConversationId",
-                    conversation.id,
-                  );
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ChatScreen(conversationId: conversation.id),
-                    ),
-                  );
                 },
-                onLongPress: () async {
-                  setState(() {
-                    selectedConversation = conversation.id;
-                  });
-                  final prefs = await SharedPreferences.getInstance();
-                  await prefs.setString(
-                    "selectedConversationId",
-                    conversation.id,
-                  );
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      return SafeArea(
-                        child: Wrap(
-                          children: [
-                            ListTile(
-                              leading: const Icon(Icons.edit),
-                              title: Text("Edit"),
-                              onTap: () {
-                                editConversation(
-                                  conversation.id,
-                                  conversation.title,
-                                );
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                              ),
-                              title: Text(
-                                "Delete",
-                                style: TextStyle(color: Colors.red),
-                              ),
-                              onTap: () {
-                                Navigator.pop(context);
-                                deleteConversation(conversation.id);
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
+                onEdit: () =>
+                    editConversation(conversation.id, conversation.title),
+                onDelete: () => deleteConversation(conversation.id),
               );
             },
           );
