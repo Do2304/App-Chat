@@ -4,9 +4,9 @@ import '/widgets/drawerBody.dart';
 import '/widgets/drawerHeader.dart';
 import 'package:flutter/material.dart';
 
-class Appdrawer extends StatelessWidget {
+class AppDrawer extends StatelessWidget {
   final VoidCallback startNewConversation;
-  const Appdrawer({super.key, required this.startNewConversation});
+  const AppDrawer({super.key, required this.startNewConversation});
 
   @override
   Widget build(BuildContext context) {

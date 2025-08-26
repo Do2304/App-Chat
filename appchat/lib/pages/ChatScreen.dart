@@ -110,7 +110,7 @@ class _ChatScreenState extends State<ChatScreen> {
         inputController: inputController,
         onSend: sendMsg,
       ),
-      drawer: Appdrawer(startNewConversation: startNewConversation),
+      drawer: AppDrawer(startNewConversation: startNewConversation),
     );
   }
 }
