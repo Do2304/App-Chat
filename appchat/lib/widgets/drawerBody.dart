@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:appchat/utils/appSnackBar.dart';
 import 'package:appchat/utils/storageService.dart';
 import 'package:appchat/widgets/conversationTile.dart';
 
@@ -79,16 +80,8 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
     );
     // print(newTitle);
     if (newTitle != null && newTitle.isNotEmpty) {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString("token");
-      final responseRenameConversation = await http.put(
-        Uri.parse("http://10.0.2.2:3001/v1/rename-conversation"),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token",
-        },
-        body: jsonEncode({"id": id, "newTitle": newTitle}),
-      );
+      final responseRenameConversation =
+          await ConversationApi.renameConversation(id, newTitle);
 
       // print(responseRenameConversation.statusCode);
       if (responseRenameConversation.statusCode == 200) {
@@ -101,25 +94,17 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
             builder: (context) => ChatScreen(conversationId: id),
           ),
         );
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Rename successfully")));
+        AppSnackBar.showSnackBar(context, "Rename successfully", 1);
+      } else {
+        AppSnackBar.showSnackBar(context, "Rename failed!!!", 1);
       }
     }
   }
 
   void deleteConversation(String id) async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString("token");
-
-    final responseDeleteConversation = await http.delete(
-      Uri.parse("http://10.0.2.2:3001/v1/conversation/$id"),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token",
-      },
+    final responseDeleteConversation = await ConversationApi.deleteConversation(
+      id,
     );
-
     if (responseDeleteConversation.statusCode == 200) {
       setState(() {
         _conversations = getListConversation();
@@ -128,13 +113,10 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
         context,
         MaterialPageRoute(builder: (context) => ChatScreen(conversationId: "")),
       );
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Delete successfully")));
+
+      AppSnackBar.showSnackBar(context, "Delete successfully", 1);
     } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Delete failed!!!")));
+      AppSnackBar.showSnackBar(context, "Delete failed!!!", 1);
     }
   }
 
