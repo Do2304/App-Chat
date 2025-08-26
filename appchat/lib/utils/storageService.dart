@@ -16,4 +16,9 @@ class StorageService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("selectedConversationId", id);
   }
+
+  static Future<void> deleteSelectedConversationId() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove("selectedConversationId");
+  }
 }
