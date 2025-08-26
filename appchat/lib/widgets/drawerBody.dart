@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '/api/conversationApi.dart';
 import '../pages/ChatScreen.dart';
 import '/models/modelConversation.dart';
 import 'package:flutter/material.dart';
@@ -17,16 +18,7 @@ class _ChatDrawerBodyState extends State<ChatDrawerBody> {
   String? selectedConversation;
 
   Future<List<Conversation>> getListConversation() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString("token");
-
-    final response = await http.get(
-      Uri.parse("http://10.0.2.2:3001/v1/conversation"),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token",
-      },
-    );
+    final response = await ConversationApi.getListConversations();
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
